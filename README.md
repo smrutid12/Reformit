@@ -117,7 +117,7 @@ This will generate a production-ready `build` folder.
 
 ## 🧑‍💻 Author
 
-Made with ❤️ by [Your Name or @smoothie]
+Made with ❤️ by Smruti Dash
 
 ---
 
