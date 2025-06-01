@@ -1,0 +1,23 @@
+{
+  "manifest_version": 3,
+  "name": "Reformit",
+  "description": "Offline file converter with premium features",
+  "version": "1.0",
+  "permissions": ["storage", "downloads"],
+  "action": {
+    "default_popup": "index.html",
+    "default_icon": "reformit_logo.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "48": "reformit_logo.png"
+  }
+}
