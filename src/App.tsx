@@ -1,35 +1,45 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
+    <main className="container">
+      <header className="header">
+        <img src="/vite.svg" className="logo" alt="Reformit logo" />
+        <h1>Welcome to Reformit</h1>
+        <p className="tagline">
+          Your all-in-one file conversion Chrome extension
         </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+      </header>
+
+      <section className="features">
+        <h2>✨ What You Can Do</h2>
+        <ul>
+          <li>🎨 Convert images, documents, audio & videos effortlessly</li>
+          <li>🧠 OCR support to extract text from images and PDFs</li>
+          <li>🗜️ Extract archives (ZIP, RAR, TAR, etc.)</li>
+          <li>⚡ Works offline for lightweight conversions</li>
+        </ul>
+      </section>
+
+      <section className="cta">
+        <a href="/reformit-extension.zip" download className="download-button">
+          ⬇️ Download Chrome Extension
+        </a>
+        <p className="note">
+          Unzip and load it via <code>chrome://extensions</code>
+        </p>
+      </section>
+
+      <footer>
+        <p className="footer-text">
+          Made with ❤️ by Smruti Dash ·{" "}
+          <a href="https://github.com/yourusername/reformit" target="_blank">
+            GitHub
+          </a>
+        </p>
+      </footer>
+    </main>
+  );
 }
 
-export default App
+export default App;
