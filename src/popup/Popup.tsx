@@ -24,7 +24,29 @@ const Popup: React.FC = () => {
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
-      setSelectedFile(e.target.files[0]);
+      const file = e.target.files[0];
+      setSelectedFile(file);
+
+      const ext = file.name.split(".").pop()?.toUpperCase() || "";
+      console.log("ext", ext);
+
+      const options = fileData[0].convertOptions;
+      console.log("available options", options);
+
+      // Iterate over each category to find matching extension
+      for (const [category, formats] of Object.entries(options)) {
+        const match = formats.find((format) => format.name === ext);
+        if (match) {
+          setFileCategory(category as ConvertOptionsKeys);
+          setFileFormat(match.id); // ✅ use the ID for consistency
+          return;
+        }
+      }
+      console.log(fileFormat, "fileFormat");
+      console.log(fileCategory, "fileCategory");
+      // If no match found
+      setFileCategory("");
+      setFileFormat("");
     }
   };
 
