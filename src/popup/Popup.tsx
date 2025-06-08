@@ -1,6 +1,6 @@
 import React, { useState, useRef } from "react";
 import "./style.css";
-import { fileData, ConvertOptions } from "../assets/data";
+import { fileData, ConvertOptions } from "../utils/data";
 
 type ConvertOptionsKeys = keyof ConvertOptions;
 
@@ -31,7 +31,10 @@ const Popup: React.FC = () => {
       console.log("ext", ext);
 
       const options = fileData[0].convertOptions;
-      console.log("available options", options);
+      console.log(
+        "convertOptions keys:",
+        Object.keys(fileData[0].convertOptions || {})
+      );
 
       // Iterate over each category to find matching extension
       for (const [category, formats] of Object.entries(options)) {
