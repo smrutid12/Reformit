@@ -19,6 +19,7 @@ const Popup: React.FC = () => {
   const [fileCategory, setFileCategory] = useState<ConvertOptionsKeys | "">("");
   const [fileFormat, setFileFormat] = useState<string>("");
   const [convertTo, setConvertTo] = useState<string>("");
+  const [download, setDownload] = useState<Boolean>(false);
 
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -62,7 +63,9 @@ const Popup: React.FC = () => {
       alert("Please select file category, format, and conversion format");
       return;
     }
+    // Here process the file
     alert(`Converting ${selectedFile.name} from ${fileFormat} to ${convertTo}`);
+    setDownload(true)
     // Your conversion logic here
   };
 
@@ -84,8 +87,12 @@ const Popup: React.FC = () => {
 
   return (
     <div className="popup-container">
-      <h2 className="popup-title">Reformit</h2>
-
+      <div className="popup-header">
+        <h2 className="popup-title">Reformit</h2>
+        <button className="history-button">
+          <img src="./history.svg" alt="Duck icon" width="20" height="20" />
+        </button>
+      </div>
       <div
         className="upload-area"
         onClick={() => fileInputRef.current?.click()}
@@ -100,7 +107,6 @@ const Popup: React.FC = () => {
         />
         <p>{selectedFile ? selectedFile.name : "Upload a file"}</p>
       </div>
-
       <div className="form-group">
         <label className="form-label">File Category</label>
         <select
@@ -127,7 +133,6 @@ const Popup: React.FC = () => {
             ))}
         </select>
       </div>
-
       {fileCategory && (
         <div className="form-group">
           <label className="form-label">File Format</label>
@@ -148,7 +153,6 @@ const Popup: React.FC = () => {
           </select>
         </div>
       )}
-
       {fileFormat && (
         <div className="form-group">
           <label className="form-label">Convert to</label>
@@ -166,14 +170,28 @@ const Popup: React.FC = () => {
           </select>
         </div>
       )}
-
-      <button
-        className="convert-button"
-        onClick={handleConvert}
-        disabled={!selectedFile || !fileCategory || !fileFormat || !convertTo}
-      >
-        Convert
-      </button>
+      {download && (
+        <div className="button-group">
+          <button className="main-button">Download</button>
+          <div className="dropdown-wrapper">
+            <button className="dropdown-toggle">▼</button>
+            <div className="dropdown-menu">
+              <button>PDF</button>
+              <button>CSV</button>
+              <button>ZIP</button>
+            </div>
+          </div>
+        </div>
+      )}
+      {!download && (
+        <button
+          className="convert-button"
+          onClick={handleConvert}
+          disabled={!selectedFile || !fileCategory || !fileFormat || !convertTo}
+        >
+          Convert
+        </button>
+      )}
     </div>
   );
 };
