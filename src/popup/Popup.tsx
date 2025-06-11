@@ -65,7 +65,7 @@ const Popup: React.FC = () => {
     }
     // Here process the file
     alert(`Converting ${selectedFile.name} from ${fileFormat} to ${convertTo}`);
-    setDownload(true)
+    setDownload(true);
     // Your conversion logic here
   };
 
@@ -176,9 +176,18 @@ const Popup: React.FC = () => {
           <div className="dropdown-wrapper">
             <button className="dropdown-toggle">▼</button>
             <div className="dropdown-menu">
-              <button>PDF</button>
-              <button>CSV</button>
-              <button>ZIP</button>
+              <button onClick={() => {}}>
+                <img src="./zip_file.svg" width="15" height="15" />
+                Download as zip
+              </button>
+              <button onClick={() => {}}>
+                <img src="./google_drive.svg" width="15" height="15" />
+                Upload to Google Drive
+              </button>
+              <button onClick={() => {}}>
+                <img src="./onedrive.svg" width="15" height="15" />
+                Upload to oneDrive
+              </button>
             </div>
           </div>
         </div>
