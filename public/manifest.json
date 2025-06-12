@@ -3,13 +3,17 @@
   "name": "Reformit",
   "description": "Offline file converter with premium features",
   "version": "1.0",
-  "permissions": ["storage", "downloads"],
+  "permissions": ["storage", "downloads", "identity"],
   "action": {
     "default_popup": "src/popup/index.html",
     "default_icon": "reformit_logo.png"
   },
   "background": {
     "service_worker": "background.js"
+  },
+  "oauth2": {
+    "client_id": "318014760151-05se0fvvr52bb3nd3js5g693k57ab0a9.apps.googleusercontent.com",
+    "scopes": ["https://www.googleapis.com/auth/drive.file"]
   },
   "content_scripts": [
     {

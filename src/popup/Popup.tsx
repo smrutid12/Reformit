@@ -1,6 +1,7 @@
 import React, { useState, useRef } from "react";
 import "./style.css";
 import { fileData, ConvertOptions } from "../utils/data";
+import { handleZipFile, uploadToDrive } from "../utils/download";
 
 type ConvertOptionsKeys = keyof ConvertOptions;
 
@@ -84,6 +85,20 @@ const Popup: React.FC = () => {
           (option) => option.id === fileFormat
         )?.convertTo || []
       : [];
+
+  const handleGoogleDriveUpload = () => {
+    chrome.identity.getAuthToken({ interactive: true }, function (token) {
+      if (chrome.runtime.lastError) {
+        console.error("Auth error:", chrome.runtime.lastError.message);
+        return;
+      }
+
+      const accessToken = token as string; // ✅ Cast to string
+
+      console.log("OAuth token:", accessToken);
+      uploadToDrive(accessToken); // No more type error
+    });
+  };
 
   return (
     <div className="popup-container">
@@ -176,16 +191,40 @@ const Popup: React.FC = () => {
           <div className="dropdown-wrapper">
             <button className="dropdown-toggle">▼</button>
             <div className="dropdown-menu">
-              <button onClick={() => {}}>
-                <img src="./zip_file.svg" width="15" height="15" />
+              <button
+                onClick={() => {
+                  if (selectedFile) {
+                    handleZipFile(selectedFile);
+                  }
+                }}
+              >
+                <img
+                  className="dropdown-menu-icons
+                "
+                  src="./zip_file.svg"
+                  width="15"
+                  height="15"
+                />
                 Download as zip
               </button>
-              <button onClick={() => {}}>
-                <img src="./google_drive.svg" width="15" height="15" />
+              <button onClick={handleGoogleDriveUpload}>
+                <img
+                  className="dropdown-menu-icons
+                  "
+                  src="./google_drive.svg"
+                  width="15"
+                  height="15"
+                />
                 Upload to Google Drive
               </button>
               <button onClick={() => {}}>
-                <img src="./onedrive.svg" width="15" height="15" />
+                <img
+                  className="dropdown-menu-icons
+                "
+                  src="./onedrive.svg"
+                  width="15"
+                  height="15"
+                />
                 Upload to oneDrive
               </button>
             </div>
