@@ -23,5 +23,16 @@
   ],
   "icons": {
     "48": "reformit_logo.png"
-  }
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "history.svg",
+        "onedrive.svg",
+        "zip_file.svg",
+        "google_drive.svg"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
 }

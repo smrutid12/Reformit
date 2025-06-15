@@ -10,6 +10,8 @@ export type ConvertOption = {
   convertTo: string[]; // target formats as string keys
 };
 
+export type ConvertOptionKey = keyof ConvertOptions;
+
 export type ConvertOptions = {
   [key in
     | "DOCS"
@@ -294,5 +296,148 @@ export const fileData = [
       //     },
       //   ],
     },
+  },
+];
+
+export const historyData = [
+  {
+    id: 1,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 2,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 3,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 4,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 5,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 6,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 7,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 8,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 9,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 10,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 11,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 12,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 13,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 14,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 15,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 16,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 17,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 18,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 19,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
+  },
+  {
+    id: 20,
+    file_name: "example_file1.docx",
+    file_type: "docx",
+    file_converted_to: "PDF",
+    file_url: "",
   },
 ];

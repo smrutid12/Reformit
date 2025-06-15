@@ -1,6 +1,23 @@
 import JSZip from "jszip";
 import { saveAs } from "file-saver";
 
+export const handleDownload = async (
+  inputFiles: File | File[]
+): Promise<void> => {
+  const files = Array.isArray(inputFiles) ? inputFiles : [inputFiles];
+
+  files.forEach((file) => {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name; // or set a custom name like "converted-file.ext"
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+};
+
 export const handleZipFile = async (
   inputFiles: File | File[]
 ): Promise<void> => {

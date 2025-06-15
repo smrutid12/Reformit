@@ -98,7 +98,7 @@
 
 .upload-area {
   position: relative; /* Add this */
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.5rem;
   padding: 2rem;
   border: 2px dashed #ccc;
   border-radius: 6px;
@@ -127,7 +127,7 @@
   margin-bottom: 1.5rem;
   padding: 5px 10px;
   background-color: #f4f3f1;
-  color: white;
+  color: #333;
   border: 2px dashed #ccc;
   border-radius: 8px;
   font-size: 16px;
@@ -224,4 +224,91 @@
 /* Show dropdown on hover */
 .dropdown-wrapper:hover .dropdown-menu {
   display: block;
+}
+
+.primary-button {
+  background-color: #e85234;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  border: none;
+}
+.primary-button:hover {
+  background-color: #b83824;
+}
+
+.file-info {
+  color: #888;
+  font-size: 0.8rem;
+  text-align: end;
+}
+
+/* History CSS */
+
+/* History.css */
+
+.history-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.history-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border-bottom: 1px solid #ccc;
+}
+
+.history-heading {
+  font-size: 1rem; /* smaller heading */
+  font-weight: 600;
+  color: #e85234; /* highlight color */
+  margin: 0;
+}
+
+.history-download-button {
+  background: #e85234;
+  border: none;
+  color: white;
+  cursor: pointer;
+  text-decoration: none;
+  border: 2px;
+}
+
+.history-download-button:hover {
+  background-color: #b83824;
+}
+
+.history-list {
+  overflow-y: auto;
+  padding: 8px;
+  flex: 1;
+  max-height: 300px;
+}
+
+.history-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.history-file-name {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin: 0 0 4px 0;
+}
+
+.history-file-type {
+  font-size: 0.75rem;
+  color: #666;
+  margin: 0;
 }
