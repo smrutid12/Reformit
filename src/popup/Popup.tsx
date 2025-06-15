@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { fileData, ConvertOptions, ConvertOptionKey } from "../utils/data";
 import Header from "../components/Header";
-import History from "../components/history";
+import History from "../components/History";
 import FileUpload from "../components/FileUpload";
 import FileInfo from "../components/FileInfo";
 import FileCategorySelect from "../components/FileCategorySelect";
