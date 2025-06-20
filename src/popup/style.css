@@ -264,13 +264,10 @@
 }
 
 .history-download-button {
-  background: #e85234;
-  border: none;
-  color: white;
-  cursor: pointer;
-  text-decoration: none;
-  border: 2px;
-  flex: 2;
+  display: flex;
+  font-family: sans-serif;
+  justify-content: center; /* center inside parent */
+  position: relative;
 }
 
 .history-download-button:hover {

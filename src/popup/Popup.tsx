@@ -123,6 +123,7 @@ const Popup: React.FC = () => {
               dropdownOpen={dropdownOpen}
               setDropdownOpen={setDropdownOpen}
               dropdownRef={dropdownRef}
+              className="button-group "
             />
           ) : (
             <ConvertButton
