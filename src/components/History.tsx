@@ -40,6 +40,7 @@ const History: React.FC<HistoryProps> = () => {
               dropdownOpen={dropdownOpen}
               setDropdownOpen={setDropdownOpen}
               dropdownRef={dropdownRef}
+              className="history-download-button"
             />
           </div>
         ))}

@@ -19,7 +19,7 @@ export const handleDownload = async (
 };
 
 export const handleZipFile = async (
-  inputFiles: File | File[]
+  inputFiles: File | File[] 
 ): Promise<void> => {
   const zip = new JSZip();
   const files: File[] = Array.isArray(inputFiles) ? inputFiles : [inputFiles];
