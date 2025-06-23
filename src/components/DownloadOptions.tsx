@@ -86,4 +86,80 @@ const DownloadOptions = ({
 
 export default DownloadOptions;
 
-export const HistoryDownloadOptions = ({}: any) => {};
+export const HistoryDownloadOptions = ({
+  file,
+  isOpen,
+  onToggle,
+  dropdownRef,
+  className = "",
+}: {
+  file: string | File;
+  isOpen: boolean;
+  onToggle: () => void;
+  dropdownRef: React.RefObject<HTMLDivElement>;
+  className?: string;
+}) => {
+  const handleGoogleDriveUpload = () => {
+    chrome.identity.getAuthToken({ interactive: true }, function (token) {
+      if (chrome.runtime.lastError) {
+        console.error("Auth error:", chrome.runtime.lastError.message);
+        return;
+      }
+      uploadToDrive(token as string);
+    });
+  };
+
+  return (
+    <div className={` ${className}`} ref={dropdownRef}>
+      <button className="main-button" onClick={() => handleDownload(file)}>
+        Download
+      </button>
+      <div className="dropdown-wrapper">
+        <button className="dropdown-toggle" onClick={onToggle}>
+          {isOpen ? "▲" : "▼"}
+        </button>
+        {isOpen && (
+          <div className="dropdown-menu">
+            <button
+              onClick={() => {
+                handleZipFile(file);
+                onToggle();
+              }}
+            >
+              <img
+                src={zipIcon}
+                className="dropdown-menu-icons"
+                width="15"
+                height="15"
+              />
+              Download as zip
+            </button>
+            <button
+              onClick={() => {
+                handleGoogleDriveUpload();
+                onToggle();
+              }}
+            >
+              <img
+                src={googleDriveIcon}
+                className="dropdown-menu-icons"
+                width="15"
+                height="15"
+              />
+              Upload to Google Drive
+            </button>
+            <button onClick={onToggle}>
+              <img
+                src={oneDriveIcon}
+                className="dropdown-menu-icons"
+                width="15"
+                height="15"
+              />
+              Upload to OneDrive
+            </button>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
