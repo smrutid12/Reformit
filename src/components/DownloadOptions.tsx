@@ -1,6 +1,9 @@
+import { RefObject } from "react";
 import {
+  filePathHandleDownload,
   handleDownload,
   handleZipFile,
+  handleZipFromS3,
   uploadToDrive,
 } from "../utils/download";
 
@@ -93,10 +96,10 @@ export const HistoryDownloadOptions = ({
   dropdownRef,
   className = "",
 }: {
-  file: string | File;
+  file: string | File ;
   isOpen: boolean;
   onToggle: () => void;
-  dropdownRef: React.RefObject<HTMLDivElement>;
+  dropdownRef: RefObject<HTMLDivElement | null>;
   className?: string;
 }) => {
   const handleGoogleDriveUpload = () => {
@@ -111,7 +114,7 @@ export const HistoryDownloadOptions = ({
 
   return (
     <div className={` ${className}`} ref={dropdownRef}>
-      <button className="main-button" onClick={() => handleDownload(file)}>
+      <button className="main-button" onClick={() => filePathHandleDownload(file)}>
         Download
       </button>
       <div className="dropdown-wrapper">
@@ -122,7 +125,7 @@ export const HistoryDownloadOptions = ({
           <div className="dropdown-menu">
             <button
               onClick={() => {
-                handleZipFile(file);
+                handleZipFromS3(file);
                 onToggle();
               }}
             >

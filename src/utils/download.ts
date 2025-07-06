@@ -19,7 +19,7 @@ export const handleDownload = async (
 };
 
 export const handleZipFile = async (
-  inputFiles: File | File[] 
+  inputFiles: File | File[]
 ): Promise<void> => {
   const zip = new JSZip();
   const files: File[] = Array.isArray(inputFiles) ? inputFiles : [inputFiles];
@@ -70,4 +70,46 @@ export const uploadToDrive = (token: string) => {
       console.error("Upload error:", err);
       alert("Upload failed.");
     });
+};
+
+export const filePathHandleDownload = async (
+  inputFiles: string | File
+): Promise<void> => {
+  const files = Array.isArray(inputFiles) ? inputFiles : [inputFiles];
+
+  files.forEach((file) => {
+    const url = URL.createObjectURL(file);
+    const link = document.createElement("a");
+    link.href = url;
+    link.download = file.name; // or set a custom name like "converted-file.ext"
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  });
+};
+
+export const handleZipFromS3 = async (
+  fileInput: string | File,
+  zipName = "download.zip"
+) => {
+  const zip = new JSZip();
+
+  try {
+    if (typeof fileInput === "string") {
+      // Handle URL
+      const response = await fetch(fileInput);
+      const blob = await response.blob();
+      const fileName = fileInput.split("/").pop() || "file";
+      zip.file(fileName, blob);
+    } else if (fileInput instanceof File) {
+      // Handle File object
+      zip.file(fileInput.name, fileInput);
+    }
+
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    saveAs(zipBlob, zipName);
+  } catch (error) {
+    console.error("Error creating ZIP:", error);
+  }
 };

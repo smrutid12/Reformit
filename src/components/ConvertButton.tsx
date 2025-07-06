@@ -8,7 +8,9 @@ const ConvertButton = ({
   disabled: boolean;
 }) => (
   <button
-    className="convert-button primary-button main-button"
+    className={`convert-button primary-button main-button ${
+      disabled ? `disabled-button` : ``
+    }`}
     onClick={onClick}
     disabled={disabled}
   >

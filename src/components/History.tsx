@@ -39,10 +39,10 @@ const History: React.FC<HistoryProps> = () => {
             </div>
             <HistoryDownloadOptions
               file={item.file_url}
-              isOpen={activeDropdownId === item.id}
+              isOpen={activeDropdownId === item.id.toString()}
               onToggle={() =>
                 setActiveDropdownId((prev) =>
-                  prev === item.id ? null : item.id
+                  prev === item.id.toString() ? null : item.id.toString()
                 )
               }
               dropdownRef={dropdownRef}
