@@ -15,24 +15,37 @@ interface HeaderProps {
   showHistory: Boolean;
   onHistoryClick: () => void;
   onBackClick: () => void;
+  isAuthenticated: Boolean;
+  onLoginClick: () => void;
 }
 
 const Header: React.FC<HeaderProps> = ({
   showHistory,
   onHistoryClick,
   onBackClick,
+  isAuthenticated,
+  onLoginClick,
 }) => (
-  <div className="popup-header">
+  <div className="popup-header flex justify-between items-center">
     <h2 className="popup-title">Reformit</h2>
-    {showHistory ? (
-      <button className="history-button" onClick={onBackClick}>
-        <img src={backButtonIconUrl} alt="back icon" width="20" height="20" />
-      </button>
-    ) : (
-      <button className="history-button" onClick={onHistoryClick}>
-        <img src={historyIconUrl} alt="history icon" width="20" height="20" />
-      </button>
-    )}
+
+    <div className="flex items-center space-x-2">
+      {!isAuthenticated && (
+        <button className="header-button" onClick={onLoginClick}>
+          <img src="user.png" alt="user icon" width="20" height="20" />
+        </button>
+      )}
+
+      {showHistory && isAuthenticated ? (
+        <button className="header-button" onClick={onBackClick}>
+          <img src={backButtonIconUrl} alt="back icon" width="20" height="20" />
+        </button>
+      ) : (
+        <button className="header-button" onClick={onHistoryClick}>
+          <img src={historyIconUrl} alt="history icon" width="20" height="20" />
+        </button>
+      )}
+    </div>
   </div>
 );
 

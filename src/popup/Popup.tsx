@@ -10,8 +10,15 @@ import ConvertToSelect from "../components/ConvertToSelect";
 import DownloadOptions from "../components/DownloadOptions";
 import ConvertButton from "../components/ConvertButton";
 import "./style.css";
+import Auth from "../components/Auth";
+import useNetworkStatus from "../utils/networkStatus";
 
 const Popup: React.FC = () => {
+  const isOnline = useNetworkStatus();
+
+  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(false);
+  const [showAuth, setShowAuth] = useState<boolean>(false);
+
   const [showHistory, setShowHistory] = useState<Boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileCategory, setFileCategory] = useState<ConvertOptionKey | "">("");
@@ -33,6 +40,28 @@ const Popup: React.FC = () => {
     document.addEventListener("mousedown", handleClick);
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
+
+  const handleLogin = () => {
+    chrome.identity.launchWebAuthFlow(
+      {
+        url: `https://your-backend.com/auth/google?mode=login`,
+        interactive: true,
+      },
+      (redirectUrl) => {
+        if (chrome.runtime.lastError || !redirectUrl) {
+          console.error("Login failed:", chrome.runtime.lastError);
+          return;
+        }
+
+        const token = new URL(redirectUrl).searchParams.get("token");
+        if (token) {
+          chrome.storage.local.set({ token }, () => {
+            setIsAuthenticated(true);
+          });
+        }
+      }
+    );
+  };
 
   const processFile = (file: File) => {
     setSelectedFile(file);
@@ -79,8 +108,15 @@ const Popup: React.FC = () => {
         showHistory={showHistory}
         onHistoryClick={() => setShowHistory(true)}
         onBackClick={() => setShowHistory(false)}
+        isAuthenticated={isAuthenticated}
+        onLoginClick={handleLogin}
       />
-      {showHistory ? (
+      {showAuth ? (
+        <Auth
+          onSuccess={handleAuthSuccess}
+          onCancel={() => setShowAuth(false)}
+        />
+      ) : showHistory ? (
         <History onClose={() => setShowHistory(false)} />
       ) : (
         <>
