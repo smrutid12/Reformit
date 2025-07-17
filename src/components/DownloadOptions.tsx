@@ -96,7 +96,7 @@ export const HistoryDownloadOptions = ({
   dropdownRef,
   className = "",
 }: {
-  file: string | File ;
+  file: string | File;
   isOpen: boolean;
   onToggle: () => void;
   dropdownRef: RefObject<HTMLDivElement | null>;
@@ -114,7 +114,10 @@ export const HistoryDownloadOptions = ({
 
   return (
     <div className={` ${className}`} ref={dropdownRef}>
-      <button className="main-button" onClick={() => filePathHandleDownload(file)}>
+      <button
+        className="main-button"
+        onClick={() => filePathHandleDownload(file)}
+      >
         Download
       </button>
       <div className="dropdown-wrapper">
