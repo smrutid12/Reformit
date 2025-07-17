@@ -309,3 +309,110 @@
   opacity: 0.5;
   cursor: not-allowed;
 }
+
+.auth-container {
+  width: 340px;
+  margin: auto;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.auth-title {
+  font-size: 1.8rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 1rem;
+  color: #e85234;
+}
+
+.auth-card {
+  border: 2px dashed #e85234;
+  border-radius: 1.25rem;
+  padding: 1.5rem;
+  background-color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+.auth-avatar img {
+  width: 60px;
+  height: 60px;
+  margin: 0 auto 0.75rem;
+}
+
+.auth-subtitle {
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+  color: #333;
+}
+
+.auth-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.auth-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.95rem;
+  transition: background 0.2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.auth-btn.apple {
+  background-color: #000;
+  color: #fff;
+}
+
+.auth-btn.google {
+  background-color: #db4437;
+  color: #fff;
+}
+
+.auth-btn.microsoft {
+  background-color: #2f2f2f;
+  color: #fff;
+}
+
+.auth-btn.onedrive {
+  background-color: #0078d4;
+  color: #fff;
+}
+
+.auth-btn:hover {
+  opacity: 0.9;
+}
+
+.auth-switch {
+  font-size: 0.85rem;
+  margin-top: 1rem;
+  color: #444;
+}
+
+.auth-switch button {
+  background: none;
+  border: none;
+  color: #e85234;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.auth-cancel {
+  font-size: 0.8rem;
+  color: #999;
+  background: none;
+  border: none;
+  margin-top: 0.5rem;
+  cursor: pointer;
+}
+
+.auth-cancel:hover {
+  text-decoration: underline;
+}
