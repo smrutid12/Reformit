@@ -16,19 +16,25 @@ import useNetworkStatus from "../utils/networkStatus";
 const Popup: React.FC = () => {
   const isOnline = useNetworkStatus();
 
-  const [isAuthenticated, setIsAuthenticated] = useState<Boolean>(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [showAuth, setShowAuth] = useState<boolean>(false);
 
-  const [showHistory, setShowHistory] = useState<Boolean>(false);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [fileCategory, setFileCategory] = useState<ConvertOptionKey | "">("");
   const [fileFormat, setFileFormat] = useState<string>("");
   const [convertTo, setConvertTo] = useState<string>("");
-  const [download, setDownload] = useState<Boolean>(false);
+  const [download, setDownload] = useState<boolean>(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    // chrome.storage.local.get("token", (result) => {
+    //   if (result.token) {
+    //     setIsAuthenticated(true);
+    //   }
+    // });
+
     const handleClick = (e: MouseEvent) => {
       if (
         dropdownRef.current &&
@@ -42,25 +48,7 @@ const Popup: React.FC = () => {
   }, []);
 
   const handleLogin = () => {
-    chrome.identity.launchWebAuthFlow(
-      {
-        url: `https://your-backend.com/auth/google?mode=login`,
-        interactive: true,
-      },
-      (redirectUrl) => {
-        if (chrome.runtime.lastError || !redirectUrl) {
-          console.error("Login failed:", chrome.runtime.lastError);
-          return;
-        }
-
-        const token = new URL(redirectUrl).searchParams.get("token");
-        if (token) {
-          chrome.storage.local.set({ token }, () => {
-            setIsAuthenticated(true);
-          });
-        }
-      }
-    );
+    setShowAuth(true);
   };
 
   const processFile = (file: File) => {
@@ -80,6 +68,12 @@ const Popup: React.FC = () => {
 
     setFileCategory("");
     setFileFormat("");
+  };
+
+  const handleAuthSuccess = (token: string) => {
+    console.log("Authenticated with token:", token);
+    setIsAuthenticated(true);
+    setShowAuth(false);
   };
 
   const handleConvert = () => {
@@ -102,23 +96,41 @@ const Popup: React.FC = () => {
         )?.convertTo || []
       : [];
 
+  console.log({
+    isAuthenticated,
+    showAuth,
+    showHistory,
+  });
+
   return (
     <div className="popup-container">
       <Header
         showHistory={showHistory}
+        showAuth={showAuth}
         onHistoryClick={() => setShowHistory(true)}
-        onBackClick={() => setShowHistory(false)}
+        onBackClick={() => {
+          setShowAuth(false);
+          setShowHistory(false);
+        }}
         isAuthenticated={isAuthenticated}
-        onLoginClick={handleLogin}
+        onLoginClick={() => setShowAuth(true)}
       />
-      {showAuth ? (
+
+      {/* 1. Auth shown only if not logged in and user clicked login */}
+      {!isAuthenticated && showAuth && (
         <Auth
           onSuccess={handleAuthSuccess}
           onCancel={() => setShowAuth(false)}
         />
-      ) : showHistory ? (
+      )}
+
+      {/* 2. History shown only if authenticated and toggled */}
+      {isAuthenticated && showHistory && (
         <History onClose={() => setShowHistory(false)} />
-      ) : (
+      )}
+
+      {/* 3. Main file UI shown if authenticated and not viewing history */}
+      {(isAuthenticated || !isAuthenticated) && !showHistory && !showAuth && (
         <>
           <FileUpload selectedFile={selectedFile} onFileChange={processFile} />
           {selectedFile && <FileInfo file={selectedFile} />}
