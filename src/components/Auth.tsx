@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-import { FaGoogle, FaGithub } from "react-icons/fa";
+import { CgProfile } from "react-icons/cg";
+import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
 
 interface AuthProps {
   onSuccess: (token: string) => void;
@@ -7,7 +8,10 @@ interface AuthProps {
 }
 
 const Auth: React.FC<AuthProps> = ({ onSuccess, onCancel }) => {
-  const [isLogin, setIsLogin] = useState(true); // Toggle between login/register
+  const [isLogin, setIsLogin] = useState(true);
+
+  const oneDriveIcon =
+    chrome.runtime?.getURL("onedrive.svg") ?? "/onedrive.svg";
 
   const handleAuth = (provider: string) => {
     const mode = isLogin ? "login" : "register";
@@ -28,7 +32,7 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onCancel }) => {
         if (token) {
           chrome.storage.local.set({ token }, () => {
             console.log("Token saved:", token);
-            onSuccess(token); // Notify parent
+            onSuccess(token);
           });
         }
       }
@@ -36,43 +40,49 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onCancel }) => {
   };
 
   return (
-    <div className="w-[320px] p-6 bg-white rounded-xl shadow-lg flex flex-col items-center space-y-5 font-sans">
-      <h2 className="text-2xl font-semibold text-gray-800">
-        {isLogin ? "Welcome Back!" : "Create Your Account"}
-      </h2>
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-avatar">
+          <CgProfile size={60} />
+        </div>
+        <h2 className="auth-subtitle">Login / Register</h2>
 
-      <button
-        onClick={() => handleAuth("google")}
-        className="flex items-center justify-center w-full gap-2 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition"
-      >
-        <FaGoogle size={18} />
-        {isLogin ? "Continue with Google" : "Sign up with Google"}
-      </button>
+        <div className="auth-buttons">
+          <button
+            onClick={() => handleAuth("apple")}
+            className="auth-btn apple"
+          >
+            <FaApple /> Continue with Apple
+          </button>
 
-      <button
-        onClick={() => handleAuth("github")}
-        className="flex items-center justify-center w-full gap-2 py-2 bg-gray-800 text-white rounded-lg hover:bg-gray-900 transition"
-      >
-        <FaGithub size={18} />
-        {isLogin ? "Continue with GitHub" : "Sign up with GitHub"}
-      </button>
+          <button
+            onClick={() => handleAuth("google")}
+            className="auth-btn google"
+          >
+            <FaGoogle /> Continue with Google
+          </button>
 
-      <p className="text-sm text-gray-600 text-center">
-        {isLogin ? "Don't have an account?" : "Already have an account?"}{" "}
-        <button
-          onClick={() => setIsLogin(!isLogin)}
-          className="text-blue-600 hover:underline font-medium"
-        >
-          {isLogin ? "Register" : "Login"}
-        </button>
-      </p>
+          <button
+            onClick={() => handleAuth("microsoft")}
+            className="auth-btn microsoft"
+          >
+            <FaMicrosoft /> Continue with Microsoft
+          </button>
 
-      <button
-        onClick={onCancel}
-        className="text-sm text-gray-500 hover:underline"
-      >
-        Cancel and go back
-      </button>
+          <button
+            onClick={() => handleAuth("onedrive")}
+            className="auth-btn onedrive"
+          >
+            <img
+              src={oneDriveIcon}
+              className="dropdown-menu-icons"
+              width="15"
+              height="15"
+            />{" "}
+            Continue with One Drive
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
