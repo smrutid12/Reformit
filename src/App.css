@@ -1,0 +1,128 @@
+body {
+  margin: 0;
+  font-family: "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(
+    135deg,
+    #00408c,
+    #96add6,
+    #f9b8af,
+    #f2eee9,
+    #f2d7d3,
+    #e85234
+  );
+  background-size: 600% 600%;
+  animation: gradientShift 20s ease infinite;
+  color: #1f2937;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.container {
+  max-width: 800px;
+  padding: 2rem;
+  text-align: center;
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(10px);
+  border-radius: 16px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+}
+
+.logo {
+  width: 60px;
+  margin-bottom: 1rem;
+  animation: spin 10s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  margin: 0.5rem 0;
+  color: #111827;
+}
+
+.tagline {
+  font-size: 1.2rem;
+  color: #374151;
+}
+
+.features {
+  margin: 2rem 0;
+  text-align: left;
+}
+
+.features h2 {
+  font-size: 1.6rem;
+  color: #e85234;
+}
+
+.features ul {
+  list-style: none;
+  padding: 0;
+}
+
+.features li {
+  margin: 0.75rem 0;
+  font-size: 1.1rem;
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.features li::before {
+  content: "✔";
+  position: absolute;
+  left: 0;
+  color: #10b981;
+}
+
+.cta {
+  margin-top: 2rem;
+}
+
+.download-button {
+  background-color: #e85234;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 8px;
+  text-decoration: none;
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  transition: background 0.3s ease;
+}
+
+.download-button:hover {
+  background-color: #b83824;
+}
+
+.note {
+  margin-top: 1rem;
+  color: #6b7280;
+  font-size: 0.9rem;
+}
+
+.footer-text {
+  margin-top: 3rem;
+  font-size: 0.85rem;
+  color: #9ca3af;
+}

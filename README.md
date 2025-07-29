@@ -23,10 +23,10 @@
 ```
 Reformit (Chrome Extension)
 │
-├── UI: HTML/CSS + React/Next.js frontend (built into popup)
+├── UI: Vite + React-based popup (HTML/CSS + TS)
 ├── File Conversion Logic:
-│   ├── Lightweight: Handled in-browser using JS libraries (e.g., PDF.js, Sharp-wasm)
-│   └── Heavy: Sent to Next.js API routes or external microservice (Python/Go)
+│   ├── Lightweight: Runs fully in-browser using JS/WASM
+│   └── Heavy: Sent to backend via REST API (Flask, Go, or Node)
 ```
 
 ---
@@ -37,13 +37,14 @@ Reformit (Chrome Extension)
 /reformit
 ├── /public
 │   └── icon.png
+│   └── manifest.json # Chrome Extension Manifest v3
 ├── /src
-│   ├── /popup        # React/Next.js popup interface
-│   ├── /background   # Background script
-│   └── /lib          # File conversion logic
-├── manifest.json     # Chrome Extension config
-├── next.config.js    # If using Next.js API routes
+│   ├── /popup        # React + Vite popup interface
+│   ├── /background   # Background scripts (if needed)
+│   └── /lib          # File conversion utilities
+├── vite.config.js    # Vite configuration
 ├── README.md
+
 ```
 
 ---
