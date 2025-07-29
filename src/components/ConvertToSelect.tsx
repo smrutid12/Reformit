@@ -5,11 +5,13 @@ const ConvertToSelect = ({
   conversions,
   selectedConversion,
   setConvertTo,
+  disabled,
 }: any) => (
   <div className="form-group">
     <label className="form-label">Convert to</label>
     <select
       className="form-select"
+      disabled={disabled}
       value={selectedConversion}
       onChange={(e) => setConvertTo(e.target.value)}
     >

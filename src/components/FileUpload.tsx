@@ -9,9 +9,12 @@ const FileUpload: React.FC<Props> = ({ selectedFile, onFileChange }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Handle the file upload
+    // Set the value of file category, file format here
     if (e.target.files?.length) {
       onFileChange(e.target.files[0]);
     }
+
   };
 
   return (

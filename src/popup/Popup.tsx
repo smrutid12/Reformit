@@ -66,23 +66,16 @@ const Popup: React.FC = () => {
       }
     }
 
+    alert("File type not supported!");
     setFileCategory("");
     setFileFormat("");
+    setConvertTo("");
   };
 
   const handleAuthSuccess = (token: string) => {
     console.log("Authenticated with token:", token);
     setIsAuthenticated(true);
     setShowAuth(false);
-  };
-
-  const handleConvert = () => {
-    if (!selectedFile || !fileCategory || !fileFormat || !convertTo) {
-      alert("Please complete all selections");
-      return;
-    }
-    setDownload(true);
-    alert(`Converting ${selectedFile.name} from ${fileFormat} to ${convertTo}`);
   };
 
   const availableFormats = fileCategory
@@ -149,6 +142,7 @@ const Popup: React.FC = () => {
               "AI",
               "METADATA",
             ]}
+            disabled={!!selectedFile && !!fileCategory && !!fileFormat}
           />
           {fileCategory && (
             <FileFormatSelect
@@ -156,6 +150,7 @@ const Popup: React.FC = () => {
               selectedFormat={fileFormat}
               setFileFormat={setFileFormat}
               setConvertTo={setConvertTo}
+              disabled={!!selectedFile && !!fileCategory && !!fileFormat}
             />
           )}
           {fileFormat && (
@@ -163,6 +158,7 @@ const Popup: React.FC = () => {
               conversions={availableConversions}
               selectedConversion={convertTo}
               setConvertTo={setConvertTo}
+              disabled={!selectedFile}
             />
           )}
           {download ? (
@@ -175,7 +171,11 @@ const Popup: React.FC = () => {
             />
           ) : (
             <ConvertButton
-              onClick={handleConvert}
+              selectedFile={selectedFile}
+              fileCategory={fileCategory}
+              fileFormat={fileFormat}
+              convertTo={convertTo}
+              setDownload={setDownload}
               disabled={
                 !selectedFile || !fileCategory || !fileFormat || !convertTo
               }
