@@ -101,6 +101,18 @@ export const fileData = [
           availability: "free",
           convertTo: ["PNG", "JPG", "GIF"],
         },
+        {
+          id: "6",
+          name: "JPEG",
+          availability: "free",
+          convertTo: ["PNG", "WEBP", "PDF", "SVG"],
+        },
+        {
+          id: "7",
+          name: "HEIC",
+          availability: "free",
+          convertTo: ["JPG", "PNG", "WEBP", "PDF"],
+        },
       ],
       AUDIO: [
         {

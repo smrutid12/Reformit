@@ -6,12 +6,14 @@ const FileFormatSelect = ({
   selectedFormat,
   setFileFormat,
   setConvertTo,
+  disabled
 }: any) => (
   <div className="form-group">
     <label className="form-label">File Format</label>
     <select
       className="form-select"
       value={selectedFormat}
+      disabled={disabled}
       onChange={(e) => {
         setFileFormat(e.target.value);
         setConvertTo("");

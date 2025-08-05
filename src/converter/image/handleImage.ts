@@ -1,24 +1,34 @@
 import { fileData } from "../../utils/data";
 
-export function handleImageConversion(fromFormat: string, toFormat: string, fileName: string): string {
-    const imageOptions = fileData[0].convertOptions.IMAGE;
-  
-    const from = fromFormat.trim().toUpperCase();
-    const to = toFormat.trim().toUpperCase();
-  
-    const fileEntry = imageOptions.find((item) => item.name === from);
-    if (!fileEntry) {
-      return `❌ Unsupported input format: ${fromFormat}`;
-    }
-  
-    const isValid = fileEntry.convertTo.includes(to);
-    if (!isValid) {
-      return `❌ Cannot convert from ${fromFormat} to ${toFormat}`;
-    }
+/**
+ * Simulates an image file conversion and returns a success or failure message.
+ */
+export async function handleImageConversion(
+  file: File,
+  fromFormat: string,
+  toFormat: string,
+  fileName: string
+): Promise<Blob | null> {
+  const from = fromFormat.trim().toUpperCase();
+  const to = toFormat.trim().toUpperCase();
 
-    // Simulate new file name
-    const newFileName = fileName.replace(/\.[^/.]+$/, `.${to.toLowerCase()}`);
-  
-    // ✅ Simulated response
-    return `✅ Successfully converted ${fileName} from ${from} to ${to} → ${newFileName}`;
+  const imageOptions = fileData[0].convertOptions.IMAGE;
+  const fileEntry = imageOptions.find((item) => item.name === from);
+
+  if (!fileEntry) {
+    alert(`❌ Unsupported input format: ${fromFormat}`);
+    return null;
   }
+
+  if (!fileEntry.convertTo.includes(to)) {
+    alert(`❌ Cannot convert from ${fromFormat} to ${toFormat}`);
+    return null;
+  }
+
+  // Simulate conversion by returning the original file as a blob
+  const convertedBlob = new Blob([await file.arrayBuffer()], {
+    type: `image/${to.toLowerCase()}`,
+  });
+
+  return convertedBlob;
+}
