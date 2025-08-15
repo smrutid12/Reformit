@@ -9,6 +9,7 @@ const ConvertButton = ({
   convertTo,
   disabled,
   setDownload,
+  setConvertedFile,
 }: {
   selectedFile: File | null;
   fileCategory: ConvertOptionKey | "";
@@ -16,6 +17,7 @@ const ConvertButton = ({
   convertTo: string | "";
   disabled: boolean;
   setDownload: (val: boolean) => void;
+  setConvertedFile: (file: File | Blob) => void;
 }) => {
   const handleFileConvert = async () => {
     if (!selectedFile || !fileCategory || !fileFormat || !convertTo) {
@@ -42,14 +44,19 @@ const ConvertButton = ({
         alert(result.message);
       }
 
-      // Optionally: Trigger a download
+      const convertedFile = new File(
+        [result],
+        `${selectedFile.name.split(".")[0]}.${convertTo.toLowerCase()}`,
+        { type: result.type }
+      );
+
+      // Optionally trigger download here
       const downloadLink = document.createElement("a");
-      downloadLink.href = URL.createObjectURL(result);
-      downloadLink.download = `${
-        selectedFile.name.split(".")[0]
-      }.${convertTo.toLowerCase()}`;
+      downloadLink.href = URL.createObjectURL(convertedFile);
+      downloadLink.download = convertedFile.name;
       downloadLink.click();
 
+      setConvertedFile(convertedFile);
       setDownload(true);
 
       alert(

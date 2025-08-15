@@ -12,6 +12,7 @@ const FileInfo: React.FC<{ file: File }> = ({ file }) => {
 
   return (
     <div className="file-info">
+      <button className="file-view-button">View</button>
       <small>{handleFileSize(file.size)}</small>
     </div>
   );

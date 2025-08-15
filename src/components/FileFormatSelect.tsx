@@ -6,7 +6,7 @@ const FileFormatSelect = ({
   selectedFormat,
   setFileFormat,
   setConvertTo,
-  disabled
+  disabled,
 }: any) => (
   <div className="form-group">
     <label className="form-label">File Format</label>
@@ -21,7 +21,7 @@ const FileFormatSelect = ({
     >
       <option value="">Select file format</option>
       {formats.map((format: any) => (
-        <option key={format.id} value={format.id}>
+        <option key={format.id} value={format.name}>
           {format.name}
         </option>
       ))}

@@ -35,5 +35,16 @@ export const convertFile = (
     return Promise.resolve(null);
   }
 
+  console.log(
+    "file",
+    file,
+    "fileFormat",
+    fileFormat,
+    "convertTo",
+    convertTo,
+    "fileName",
+    fileName
+  );
+
   return handler(file, fileFormat, convertTo, fileName);
 };

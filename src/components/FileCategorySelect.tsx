@@ -10,41 +10,12 @@ interface Props {
   setConvertTo: (value: string) => void;
   fileTypes: any;
   validFileTypes: ConvertOptionKey[];
-  disabled: boolean | true;
 }
 
-const FileCategorySelect: React.FC<Props> = ({
-  fileCategory,
-  setFileCategory,
-  setFileFormat,
-  setConvertTo,
-  fileTypes,
-  validFileTypes,
-  disabled,
-}) => (
+const FileCategorySelect: React.FC<Props> = ({ fileCategory }) => (
   <div className="form-group">
     <label className="form-label">File Category</label>
-    <select
-      className="form-select"
-      disabled={disabled}
-      value={fileCategory}
-      onChange={(e) => {
-        const val = e.target.value as ConvertOptionKey | "";
-        if (val === "" || validFileTypes.includes(val as ConvertOptionKey)) {
-          setFileCategory(val);
-          setFileFormat("");
-          setConvertTo("");
-        }
-      }}
-    >
-      <option value="">Select file category</option>
-      {fileTypes &&
-        Object.values(fileTypes).map((value: any, idx: number) => (
-          <option key={idx} value={value.key}>
-            {value.name}
-          </option>
-        ))}
-    </select>
+    <input className="form-select" type="text" value={fileCategory} disabled defaultValue="Select the file"/>
   </div>
 );
 

@@ -21,6 +21,7 @@ const Popup: React.FC = () => {
 
   const [showHistory, setShowHistory] = useState<boolean>(false);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const [convertedFile, setConvertedFile] = useState<File | Blob | null>(null);
   const [fileCategory, setFileCategory] = useState<ConvertOptionKey | "">("");
   const [fileFormat, setFileFormat] = useState<string>("");
   const [convertTo, setConvertTo] = useState<string>("");
@@ -47,6 +48,11 @@ const Popup: React.FC = () => {
     return () => document.removeEventListener("mousedown", handleClick);
   }, []);
 
+  useEffect(() => {
+    setDownload(false);
+    setConvertedFile(null); // You must track converted file
+  }, [convertTo]);
+
   const handleLogin = () => {
     setShowAuth(true);
   };
@@ -58,15 +64,18 @@ const Popup: React.FC = () => {
     const options = fileData[0].convertOptions;
 
     for (const [category, formats] of Object.entries(options)) {
+      console.log(formats, "aaaa");
       const match = formats.find((f) => f.name === ext);
       if (match) {
+        console.log(match, "sssss");
         setFileCategory(category as ConvertOptionKey);
-        setFileFormat(match.id);
+        setFileFormat(match.name);
         return;
       }
     }
 
     alert("File type not supported!");
+    setSelectedFile(null);
     setFileCategory("");
     setFileFormat("");
     setConvertTo("");
@@ -85,15 +94,18 @@ const Popup: React.FC = () => {
   const availableConversions =
     fileCategory && fileFormat
       ? fileData[0].convertOptions[fileCategory]?.find(
-          (f) => f.id === fileFormat
+          (f) => f.name === fileFormat
         )?.convertTo || []
       : [];
 
-  console.log({
-    isAuthenticated,
-    showAuth,
-    showHistory,
-  });
+  // console.log({
+  //   isAuthenticated,
+  //   showAuth,
+  //   showHistory,
+  // });
+  console.log(fileCategory, "fileCategoryyyyyy");
+  console.log(fileFormat, "fileFormattttttt");
+  console.log(convertTo, "convertToooooooooo");
 
   return (
     <div className="popup-container">
@@ -126,7 +138,7 @@ const Popup: React.FC = () => {
       {(isAuthenticated || !isAuthenticated) && !showHistory && !showAuth && (
         <>
           <FileUpload selectedFile={selectedFile} onFileChange={processFile} />
-          {selectedFile && <FileInfo file={selectedFile} />}
+          {selectedFile && <FileInfo file={selectedFile} /> }
           <FileCategorySelect
             fileCategory={fileCategory}
             setFileCategory={setFileCategory}
@@ -142,7 +154,6 @@ const Popup: React.FC = () => {
               "AI",
               "METADATA",
             ]}
-            disabled={!!selectedFile && !!fileCategory && !!fileFormat}
           />
           {fileCategory && (
             <FileFormatSelect
@@ -161,7 +172,7 @@ const Popup: React.FC = () => {
               disabled={!selectedFile}
             />
           )}
-          {download ? (
+          {download && convertedFile ? (
             <DownloadOptions
               file={selectedFile}
               dropdownOpen={dropdownOpen}
@@ -176,6 +187,7 @@ const Popup: React.FC = () => {
               fileFormat={fileFormat}
               convertTo={convertTo}
               setDownload={setDownload}
+              setConvertedFile={setConvertedFile}
               disabled={
                 !selectedFile || !fileCategory || !fileFormat || !convertTo
               }
