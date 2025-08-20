@@ -70,12 +70,22 @@
   color: #444;
 }
 
+/* Base Select/Input Styling */
 .form-select {
   width: 100%;
   padding: 0.5rem;
   border-radius: 4px;
   border: 1px solid #ddd;
   background-color: #fff;
+  box-sizing: border-box;
+}
+
+/* Disabled State */
+.form-select:disabled {
+  background-color: #f5f5f5; /* subtle gray */
+  color: #666; /* muted text */
+  cursor: not-allowed;
+  opacity: 1; /* keep text visible (override browser defaults) */
 }
 
 /* Convert Button */
@@ -236,17 +246,166 @@
 .file-info {
   color: #888;
   font-size: 0.8rem;
-  text-align: end;
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 0.5rem;
+}
+.file-size {
+  align-self: center;
 }
 
-.file-view-button{
+/* Tooltip container */
+.file-view-button {
+  position: relative;
   background-color: #e85234;
   color: white;
-  cursor: pointer;
-  transition: background-color 0.3s;
   border: none;
+  border-radius: 4px;
+  padding: 0.25rem 0.6rem;
+  font-size: 0.75rem;
+  font-weight: 600;
   cursor: pointer;
-  margin: 0 5px;
+  margin: 0 4px;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.file-view-button:hover {
+  background-color: #b83824;
+  transform: scale(1.05);
+}
+
+/* Tooltip text */
+.file-view-button .tooltip-text {
+  visibility: hidden;
+  width: max-content;
+  max-width: 200px;
+  background-color: #333; /* dark tooltip */
+  color: #fff;
+  text-align: center;
+  border-radius: 4px;
+  padding: 4px 8px;
+  font-size: 0.7rem;
+  position: absolute;
+  z-index: 10;
+  bottom: 125%; /* show above button */
+  left: 50%;
+  transform: translateX(-50%);
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+/* Tooltip arrow */
+.file-view-button .tooltip-text::after {
+  content: "";
+  position: absolute;
+  top: 100%; /* arrow at bottom of tooltip */
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: #333 transparent transparent transparent;
+}
+
+/* Show tooltip on hover */
+.file-view-button:hover .tooltip-text {
+  visibility: visible;
+  opacity: 1;
+}
+
+.file-view-button:disabled {
+  background-color: #e85234; /* keep theme color */
+  opacity: 0.5; /* faded look */
+  cursor: not-allowed; /* show disabled cursor */
+  transform: none; /* remove hover scale */
+}
+
+.file-view-button:disabled:hover {
+  background-color: #e85234; /* prevent hover color change */
+}
+
+/* File Viewer modal */
+
+/* Modal Overlay */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 10000;
+}
+
+/* Modal Content */
+.modal-content {
+  background: #fff;
+  border-radius: 10px;
+  width: 95%; /* almost full width */
+  height: 90vh; /* almost full height */
+  max-width: 1200px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+/* Modal Header */
+.modal-title {
+  margin: 0;
+  padding: 1rem 1.5rem;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #333;
+  border-bottom: 1px solid #eee;
+  text-align: left; /* align title to the left */
+}
+
+/* Close Button */
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 16px;
+  background: none;
+  border: none;
+  font-size: 1.2rem;
+  cursor: pointer;
+  color: #888;
+}
+.modal-close:hover {
+  color: #e85234;
+}
+
+/* Modal Body */
+.modal-body {
+  flex: 1;
+  padding: 0; /* remove extra padding */
+  overflow: auto;
+  overflow-x: hidden;
+  width: 100%;
+}
+
+/* Preview (image/pdf/etc.) */
+.modal-preview {
+  width: 100%;
+  height: 100%; /* fill the modal body */
+  border-radius: 0; /* no border-radius to match edges */
+  object-fit: contain; /* keep aspect ratio */
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* History CSS */

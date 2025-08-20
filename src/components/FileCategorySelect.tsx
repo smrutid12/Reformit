@@ -15,7 +15,7 @@ interface Props {
 const FileCategorySelect: React.FC<Props> = ({ fileCategory }) => (
   <div className="form-group">
     <label className="form-label">File Category</label>
-    <input className="form-select" type="text" value={fileCategory} disabled defaultValue="Select the file"/>
+    <input className="form-select" type="text" value={fileCategory} disabled placeholder="Select a file"/>
   </div>
 );
 
