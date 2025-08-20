@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { CgProfile } from "react-icons/cg";
-import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
+import { authProviders } from "../utils/data";
 
 interface AuthProps {
   onSuccess: (token: string) => void;
@@ -10,12 +10,9 @@ interface AuthProps {
 const Auth: React.FC<AuthProps> = ({ onSuccess, onCancel }) => {
   const [isLogin, setIsLogin] = useState(true);
 
-  const oneDriveIcon =
-    chrome.runtime?.getURL("onedrive.svg") ?? "/onedrive.svg";
-
-  const handleAuth = (provider: string) => {
+  const handleAuth = (providerId: string) => {
     const mode = isLogin ? "login" : "register";
-    const authUrl = `https://your-backend.com/auth/${provider}?mode=${mode}`;
+    const authUrl = `https://your-backend.com/auth/${providerId}?mode=${mode}`;
 
     chrome.identity.launchWebAuthFlow(
       {
@@ -48,39 +45,25 @@ const Auth: React.FC<AuthProps> = ({ onSuccess, onCancel }) => {
         <h2 className="auth-subtitle">Login / Register</h2>
 
         <div className="auth-buttons">
-          <button
-            onClick={() => handleAuth("apple")}
-            className="auth-btn apple"
-          >
-            <FaApple /> Continue with Apple
-          </button>
-
-          <button
-            onClick={() => handleAuth("google")}
-            className="auth-btn google"
-          >
-            <FaGoogle /> Continue with Google
-          </button>
-
-          <button
-            onClick={() => handleAuth("microsoft")}
-            className="auth-btn microsoft"
-          >
-            <FaMicrosoft /> Continue with Microsoft
-          </button>
-
-          <button
-            onClick={() => handleAuth("onedrive")}
-            className="auth-btn onedrive"
-          >
-            <img
-              src={oneDriveIcon}
-              className="dropdown-menu-icons"
-              width="15"
-              height="15"
-            />{" "}
-            Continue with One Drive
-          </button>
+          {authProviders.map(({ id, name, color, Icon, imgSrc }) => (
+            <button
+              key={id}
+              onClick={() => handleAuth(id)}
+              className="auth-btn"
+              style={{ backgroundColor: color, color: "#fff" }}
+            >
+              {Icon && <Icon />}
+              {imgSrc && (
+                <img
+                  src={imgSrc}
+                  width={15}
+                  height={15}
+                  style={{ marginRight: 5 }}
+                />
+              )}
+              Continue with {name}
+            </button>
+          ))}
         </div>
       </div>
     </div>

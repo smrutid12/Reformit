@@ -1,0 +1,55 @@
+{
+  "hash": "c656c649",
+  "configHash": "246b4c1a",
+  "lockfileHash": "05e756b6",
+  "browserHash": "9a86e574",
+  "optimized": {
+    "file-saver": {
+      "src": "../../node_modules/file-saver/dist/FileSaver.min.js",
+      "file": "file-saver.js",
+      "fileHash": "b3c53cb7",
+      "needsInterop": true
+    },
+    "jszip": {
+      "src": "../../node_modules/jszip/dist/jszip.min.js",
+      "file": "jszip.js",
+      "fileHash": "ad62d1d0",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "cba03380",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "a7fbfc3c",
+      "needsInterop": true
+    },
+    "react-icons/cg": {
+      "src": "../../node_modules/react-icons/cg/index.mjs",
+      "file": "react-icons_cg.js",
+      "fileHash": "938b3b0f",
+      "needsInterop": false
+    },
+    "react-icons/fa": {
+      "src": "../../node_modules/react-icons/fa/index.mjs",
+      "file": "react-icons_fa.js",
+      "fileHash": "aad7b12e",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-RRCMTYHW": {
+      "file": "chunk-RRCMTYHW.js"
+    },
+    "chunk-45R4IVA7": {
+      "file": "chunk-45R4IVA7.js"
+    },
+    "chunk-7D4SUZUM": {
+      "file": "chunk-7D4SUZUM.js"
+    }
+  }
+}
