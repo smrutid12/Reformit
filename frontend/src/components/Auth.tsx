@@ -1,72 +1,102 @@
-import React, { useState } from "react";
-import { CgProfile } from "react-icons/cg";
-import { authProviders } from "../utils/data";
+import React from "react";
+import { GoogleLogin, GoogleOAuthProvider } from "@react-oauth/google";
+import { PublicClientApplication } from "@azure/msal-browser";
+import axios from "axios";
 
 interface AuthProps {
   onSuccess: (token: string) => void;
   onCancel: () => void;
 }
 
+// Safe redirect URI for Chrome extension
+const redirectUri =
+  typeof chrome !== "undefined" && chrome.identity
+    ? chrome.identity.getRedirectURL()
+    : window.location.origin;
+
+// MSAL config for Microsoft/OneDrive
+const msalConfig = {
+  auth: {
+    clientId: import.meta.env.VITE_MICROSOFT_CLIENT_ID!,
+    authority: "https://login.microsoftonline.com/common",
+    redirectUri,
+  },
+};
+
+const msalInstance = new PublicClientApplication(msalConfig);
+
 const Auth: React.FC<AuthProps> = ({ onSuccess, onCancel }) => {
-  const [isLogin, setIsLogin] = useState(true);
+  // 🔹 Google login
+  const googleClientId = import.meta.env.VITE_GOOGLE_CLIENT_ID;
+  if (!googleClientId) throw new Error("VITE_GOOGLE_CLIENT_ID is missing");
 
-  const handleAuth = (providerId: string) => {
-    const mode = isLogin ? "login" : "register";
-    const authUrl = `https://your-backend.com/auth/${providerId}?mode=${mode}`;
+  const handleGoogleLogin = async (credentialResponse: any) => {
+    try {
+      const providerToken = credentialResponse.credential;
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/sso/google?provider_token=${providerToken}`
+      );
+      const jwt = res.data.access_token;
+      chrome.storage.local.set({ token: jwt });
+      onSuccess(jwt);
+    } catch (err) {
+      console.error("Google login failed:", err);
+    }
+  };
 
-    chrome.identity.launchWebAuthFlow(
-      {
-        url: authUrl,
-        interactive: true,
-      },
-      (redirectUrl) => {
-        if (chrome.runtime.lastError || !redirectUrl) {
-          console.error("Auth failed:", chrome.runtime.lastError);
-          return;
-        }
+  // 🔹 Microsoft / OneDrive login
+  const handleMicrosoftLogin = async () => {
+    try {
+      const loginResponse = await msalInstance.loginPopup({ scopes: ["User.Read"] });
+      const providerToken = loginResponse.accessToken;
 
-        const token = new URL(redirectUrl).searchParams.get("token");
-        if (token) {
-          chrome.storage.local.set({ token }, () => {
-            console.log("Token saved:", token);
-            onSuccess(token);
-          });
-        }
-      }
-    );
+      const res = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/sso/microsoft?provider_token=${providerToken}`
+      );
+      const jwt = res.data.access_token;
+      chrome.storage.local.set({ token: jwt });
+      onSuccess(jwt);
+    } catch (err) {
+      console.error("Microsoft/OneDrive login failed:", err);
+    }
   };
 
   return (
-    <div className="auth-container">
-      <div className="auth-card">
-        <div className="auth-avatar">
-          <CgProfile size={60} />
-        </div>
-        <h2 className="auth-subtitle">Login / Register</h2>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID!}>
+      <div className="auth-container">
+        <h2>Login</h2>
 
-        <div className="auth-buttons">
-          {authProviders.map(({ id, name, color, Icon, imgSrc }) => (
-            <button
-              key={id}
-              onClick={() => handleAuth(id)}
-              className="auth-btn"
-              style={{ backgroundColor: color, color: "#fff" }}
-            >
-              {Icon && <Icon />}
-              {imgSrc && (
-                <img
-                  src={imgSrc}
-                  width={15}
-                  height={15}
-                  style={{ marginRight: 5 }}
-                />
-              )}
-              Continue with {name}
-            </button>
-          ))}
-        </div>
+        {/* Google Login */}
+        <GoogleLogin
+          onSuccess={handleGoogleLogin}
+          onError={() => console.log("Google login failed")}
+        />
+
+        {/* Microsoft Login */}
+        <button
+          onClick={handleMicrosoftLogin}
+          className="auth-btn bg-blue-600 text-white mt-2"
+        >
+          Login with Microsoft
+        </button>
+
+        {/* OneDrive Login (same flow as Microsoft) */}
+        <button
+          onClick={handleMicrosoftLogin}
+          className="auth-btn bg-green-600 text-white mt-2"
+        >
+          Login with OneDrive
+        </button>
+
+        {/* Cancel button */}
+        <button
+          onClick={onCancel}
+          className="auth-btn bg-gray-500 text-white mt-4"
+        >
+          Cancel
+        </button>
       </div>
-    </div>
+    </GoogleOAuthProvider>
   );
 };
 
