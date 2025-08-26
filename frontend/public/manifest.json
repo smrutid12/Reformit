@@ -3,6 +3,13 @@
   "name": "Reformit",
   "description": "Offline file converter with premium features",
   "version": "1.0",
+  "host_permissions": [
+    "https://accounts.google.com/*",
+    "https://oauth2.googleapis.com/*",
+    "https://login.microsoftonline.com/*",
+    "https://graph.microsoft.com/*",
+    "http://127.0.0.1:8000/*"
+  ],
   "permissions": ["storage", "downloads", "identity"],
   "action": {
     "default_popup": "src/popup/index.html",

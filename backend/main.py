@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 from routers import health, auth, convert, history
 
 app = FastAPI(
@@ -9,6 +10,14 @@ app = FastAPI(
         "name": "MIT License",
         "url": "https://opensource.org/licenses/MIT",
     },
+)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # or [f"chrome-extension://{YOUR_EXTENSION_ID}"]
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
 )
 
 # Include routers

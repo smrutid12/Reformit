@@ -1,202 +1,91 @@
-import React, { useState, useRef, useEffect } from "react";
-import { fileData, ConvertOptions, ConvertOptionKey } from "../utils/data";
-import Header from "../components/Header";
-import History from "../components/History";
-import FileUpload from "../components/FileUpload";
-import FileInfo from "../components/FileInfo";
-import FileCategorySelect from "../components/FileCategorySelect";
-import FileFormatSelect from "../components/FileFormatSelect";
-import ConvertToSelect from "../components/ConvertToSelect";
-import DownloadOptions from "../components/DownloadOptions";
-import ConvertButton from "../components/ConvertButton";
-import "./style.css";
-import Auth from "../components/Auth";
-import useNetworkStatus from "../utils/networkStatus";
+import React from "react";
+import { CgProfile } from "react-icons/cg";
+import { FaGoogle, FaMicrosoft } from "react-icons/fa";
 
-const Popup: React.FC = () => {
-  const isOnline = useNetworkStatus();
+interface AuthProps {
+  onSuccess: (token: string) => void;
+}
 
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
-  const [showAuth, setShowAuth] = useState<boolean>(false);
+// Backend URL
+const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
-  const [showHistory, setShowHistory] = useState<boolean>(false);
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [convertedFile, setConvertedFile] = useState<File | Blob | null>(null);
-  const [fileCategory, setFileCategory] = useState<ConvertOptionKey | "">("");
-  const [fileFormat, setFileFormat] = useState<string>("");
-  const [convertTo, setConvertTo] = useState<string>("");
-  const [download, setDownload] = useState<boolean>(false);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+const Auth: React.FC<AuthProps> = ({ onSuccess }) => {
+  const oneDriveIcon =
+    chrome.runtime?.getURL("onedrive.svg") ?? "/onedrive.svg";
 
-  useEffect(() => {
-    // chrome.storage.local.get("token", (result) => {
-    //   if (result.token) {
-    //     setIsAuthenticated(true);
-    //   }
-    // });
+  // 🔹 Generic OAuth handler for all providers
+  const handleAuth = (provider: "google" | "microsoft" | "onedrive") => {
+    const authUrl = `${backendUrl}/sso/${provider}?redirect_uri=${encodeURIComponent(
+      chrome.identity.getRedirectURL()
+    )}`;
 
-    const handleClick = (e: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(e.target as Node)
-      ) {
-        setDropdownOpen(false);
+    chrome.identity.launchWebAuthFlow(
+      {
+        url: authUrl,
+        interactive: true,
+      },
+      (redirectUrl) => {
+        if (chrome.runtime.lastError || !redirectUrl) {
+          console.error("Auth failed:", chrome.runtime.lastError);
+          alert(`Login failed for ${provider}`);
+          return;
+        }
+
+        // Extract token from redirect URL
+        const token = new URL(redirectUrl).searchParams.get("token");
+        if (token) {
+          chrome.storage.local.set({ token }, () => {
+            console.log(`${provider} token saved:`, token);
+            onSuccess(token);
+          });
+        } else {
+          alert(`No token received from ${provider}`);
+        }
       }
-    };
-    document.addEventListener("mousedown", handleClick);
-    return () => document.removeEventListener("mousedown", handleClick);
-  }, []);
-
-  useEffect(() => {
-    setDownload(false);
-    setConvertedFile(null); // You must track converted file
-  }, [convertTo]);
-
-  const handleLogin = () => {
-    setShowAuth(true);
+    );
   };
-
-  const processFile = (file: File) => {
-    setSelectedFile(file);
-
-    const ext = file.name.split(".").pop()?.toUpperCase() || "";
-    const options = fileData[0].convertOptions;
-
-    for (const [category, formats] of Object.entries(options)) {
-      console.log(formats, "aaaa");
-      const match = formats.find((f) => f.name === ext);
-      if (match) {
-        console.log(match, "sssss");
-        setFileCategory(category as ConvertOptionKey);
-        setFileFormat(match.name);
-        return;
-      }
-    }
-
-    alert("File type not supported!");
-    setSelectedFile(null);
-    setFileCategory("");
-    setFileFormat("");
-    setConvertTo("");
-  };
-
-  const handleAuthSuccess = (token: string) => {
-    console.log("Authenticated with token:", token);
-    setIsAuthenticated(true);
-    setShowAuth(false);
-  };
-
-  const availableFormats = fileCategory
-    ? fileData[0].convertOptions[fileCategory]
-    : [];
-
-  const availableConversions =
-    fileCategory && fileFormat
-      ? fileData[0].convertOptions[fileCategory]?.find(
-          (f) => f.name === fileFormat
-        )?.convertTo || []
-      : [];
-
-  // console.log({
-  //   isAuthenticated,
-  //   showAuth,
-  //   showHistory,
-  // });
-  console.log(fileCategory, "fileCategoryyyyyy");
-  console.log(fileFormat, "fileFormattttttt");
-  console.log(convertTo, "convertToooooooooo");
 
   return (
-    <div className="popup-container">
-      <Header
-        showHistory={showHistory}
-        showAuth={showAuth}
-        onHistoryClick={() => setShowHistory(true)}
-        onBackClick={() => {
-          setShowAuth(false);
-          setShowHistory(false);
-        }}
-        isAuthenticated={isAuthenticated}
-        onLoginClick={() => setShowAuth(true)}
-      />
+    <div className="auth-container">
+      <div className="auth-card">
+        <div className="auth-avatar">
+          <CgProfile size={60} />
+        </div>
+        <h2 className="auth-subtitle">Login</h2>
 
-      {/* 1. Auth shown only if not logged in and user clicked login */}
-      {!isAuthenticated && showAuth && (
-        <Auth
-          onSuccess={handleAuthSuccess}
-          onCancel={() => setShowAuth(false)}
-        />
-      )}
+        <div className="auth-buttons">
 
-      {/* 2. History shown only if authenticated and toggled */}
-      {isAuthenticated && showHistory && (
-        <History onClose={() => setShowHistory(false)} />
-      )}
+          {/* Google Login */}
+          <button onClick={() => handleAuth("google")} className="auth-btn google">
+            <FaGoogle /> Continue with Google
+          </button>
 
-      {/* 3. Main file UI shown if authenticated and not viewing history */}
-      {(isAuthenticated || !isAuthenticated) && !showHistory && !showAuth && (
-        <>
-          <FileUpload selectedFile={selectedFile} onFileChange={processFile} />
-          {selectedFile && <FileInfo file={selectedFile} /> }
-          <FileCategorySelect
-            fileCategory={fileCategory}
-            setFileCategory={setFileCategory}
-            setFileFormat={setFileFormat}
-            setConvertTo={setConvertTo}
-            fileTypes={fileData[0]?.fileTypes}
-            validFileTypes={[
-              "DOCS",
-              "IMAGE",
-              "AUDIO",
-              "VIDEO",
-              "ARCHIVE",
-              "AI",
-              "METADATA",
-            ]}
-          />
-          {fileCategory && (
-            <FileFormatSelect
-              formats={availableFormats}
-              selectedFormat={fileFormat}
-              setFileFormat={setFileFormat}
-              setConvertTo={setConvertTo}
-              disabled={!!selectedFile && !!fileCategory && !!fileFormat}
-            />
-          )}
-          {fileFormat && (
-            <ConvertToSelect
-              conversions={availableConversions}
-              selectedConversion={convertTo}
-              setConvertTo={setConvertTo}
-              disabled={!selectedFile}
-            />
-          )}
-          {download && convertedFile ? (
-            <DownloadOptions
-              file={selectedFile}
-              dropdownOpen={dropdownOpen}
-              setDropdownOpen={setDropdownOpen}
-              dropdownRef={dropdownRef}
-              className="button-group"
-            />
-          ) : (
-            <ConvertButton
-              selectedFile={selectedFile}
-              fileCategory={fileCategory}
-              fileFormat={fileFormat}
-              convertTo={convertTo}
-              setDownload={setDownload}
-              setConvertedFile={setConvertedFile}
-              disabled={
-                !selectedFile || !fileCategory || !fileFormat || !convertTo
-              }
-            />
-          )}
-        </>
-      )}
+          {/* Microsoft Login */}
+          <button
+            onClick={() => handleAuth("microsoft")}
+            className="auth-btn microsoft"
+          >
+            <FaMicrosoft /> Continue with Microsoft
+          </button>
+
+          {/* OneDrive Login */}
+          <button
+            onClick={() => handleAuth("onedrive")}
+            className="auth-btn onedrive"
+          >
+            <img
+              src={oneDriveIcon}
+              className="dropdown-menu-icons"
+              width="15"
+              height="15"
+              alt="OneDrive"
+            />{" "}
+            Continue with OneDrive
+          </button>
+        </div>
+      </div>
     </div>
   );
 };
 
-export default Popup;
+export default Auth;
