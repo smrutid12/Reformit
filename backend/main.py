@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from routers import health, auth, convert, history
+from routers import health, auth, convert, history, config
 
 app = FastAPI(
     title="ReformIt Backend",
@@ -14,5 +14,6 @@ app = FastAPI(
 # Include routers
 app.include_router(health.router)
 app.include_router(auth.router, prefix="/auth", tags=["auth"])
+app.include_router(config.router, prefix="/auth", tags=["config"])
 app.include_router(convert.router, prefix="/convert", tags=["convert"])
 app.include_router(history.router, prefix="/history", tags=["history"])

@@ -1,37 +1,3 @@
-// authData.tsx
-import { FaGoogle, FaApple, FaMicrosoft } from "react-icons/fa";
-
-export interface AuthProvider {
-  id: string;
-  name: string;
-  color: string;
-  Icon?: React.ElementType; // optional for components
-  imgSrc?: string;           // optional for image URLs
-}
-
-const oneDriveIcon = chrome.runtime?.getURL("onedrive.svg") ?? "/onedrive.svg";
-
-export const authProviders: AuthProvider[] = [
-  {
-    id: "google",
-    name: "Google",
-    color: "#db4437",
-    Icon: FaGoogle,
-  },
-  {
-    id: "microsoft",
-    name: "Microsoft",
-    color: "#2f2f2f",
-    Icon: FaMicrosoft,
-  },
-  {
-    id: "onedrive",
-    name: "OneDrive",
-    color: "#0078d4",
-    imgSrc: oneDriveIcon,
-  },
-];
-
 
 export type FileType = {
   key: string;
