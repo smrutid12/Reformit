@@ -1,18 +1,19 @@
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 from typing import List
 
 from core.database import get_db
 from models.history import FileHistory
 from models.user import User
-from core.auth import get_current_user  # We'll define this in auth utils
+from core.auth import get_current_user  # async dependency
 
 router = APIRouter(prefix="/history", tags=["history"])
 
 
-@router.get("/", response_model=List[dict])
-def get_file_history(
-    db: Session = Depends(get_db),
+@router.get("/history", response_model=List[dict])
+async def get_file_history(
+    db: AsyncSession = Depends(get_db),
     current_user: User = Depends(get_current_user),
 ):
     """
@@ -24,12 +25,13 @@ def get_file_history(
             detail="Not authenticated",
         )
 
-    history = (
-        db.query(FileHistory)
-        .filter(FileHistory.user_id == current_user.id)
+    # 🔹 Async query
+    result = await db.execute(
+        select(FileHistory)
+        .where(FileHistory.user_id == current_user.id)
         .order_by(FileHistory.created_at.desc())
-        .all()
     )
+    history = result.scalars().all()
 
     return [
         {

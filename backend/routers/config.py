@@ -1,16 +1,18 @@
 import os
+from urllib.parse import urlencode
 from fastapi import APIRouter
 from fastapi.responses import JSONResponse
+from core.config import settings
 
 router = APIRouter()
 
-REDIRECT_URI = f"https://{os.getenv('CHROME_EXTENSION_ID')}.chromiumapp.org/"
+REDIRECT_URI = f"https://{settings.CHROME_EXTENSION_ID}.chromiumapp.org/"
 
 @router.get("/config")
-def get_auth_config():
-    google_client_id = os.getenv("GOOGLE_CLIENT_ID")
-    microsoft_client_id = os.getenv("MICROSOFT_CLIENT_ID")
-
+async def get_auth_config():
+    google_client_id = settings.GOOGLE_CLIENT_ID
+    microsoft_client_id = settings.MICROSOFT_CLIENT_ID
+    print(google_client_id, microsoft_client_id, 'sssssssss')
     if not google_client_id or not microsoft_client_id:
         return JSONResponse(
             status_code=500,
@@ -18,28 +20,34 @@ def get_auth_config():
         )
 
     google_auth_url = (
-        f"https://accounts.google.com/o/oauth2/v2/auth?"
-        f"client_id={google_client_id}"
-        f"&response_type=id_token"
-        f"&redirect_uri={REDIRECT_URI}"
-        f"&scope=openid%20email%20profile"
-        f"&prompt=select_account"
+        "https://accounts.google.com/o/oauth2/v2/auth?"
+        + urlencode({
+            "client_id": google_client_id,
+            "response_type": "id_token",
+            "redirect_uri": REDIRECT_URI,
+            "scope": "openid email profile",
+            "prompt": "select_account",
+        })
     )
 
     microsoft_auth_url = (
-        f"https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
-        f"client_id={microsoft_client_id}"
-        f"&response_type=token"
-        f"&redirect_uri={REDIRECT_URI}"
-        f"&scope=openid%20profile%20email%20User.Read"
+        "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
+        + urlencode({
+            "client_id": microsoft_client_id,
+            "response_type": "token",
+            "redirect_uri": REDIRECT_URI,
+            "scope": "openid profile email User.Read",
+        })
     )
 
     onedrive_auth_url = (
-        f"https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
-        f"client_id={microsoft_client_id}"
-        f"&response_type=token"
-        f"&redirect_uri={REDIRECT_URI}"
-        f"&scope=openid%20profile%20email%20User.Read%20Files.Read"
+        "https://login.microsoftonline.com/common/oauth2/v2.0/authorize?"
+        + urlencode({
+            "client_id": microsoft_client_id,
+            "response_type": "token",
+            "redirect_uri": REDIRECT_URI,
+            "scope": "openid profile email User.Read Files.Read",
+        })
     )
 
     return {

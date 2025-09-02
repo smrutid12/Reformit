@@ -1,28 +1,32 @@
 # backend/core/database.py
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, declarative_base
+from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
+from sqlalchemy.orm import declarative_base, sessionmaker
 from core.config import settings
 
 # ----------------------------
-# Database URL (SQLite example)
+# Database URL (Async SQLite example)
+# Use "sqlite+aiosqlite://" for async SQLite
 # ----------------------------
-DATABASE_URL = settings.DATABASE_URL
+DATABASE_URL = settings.DATABASE_URL.replace("sqlite://", "sqlite+aiosqlite://")
 
 # ----------------------------
-# Create engine
+# Create async engine
 # ----------------------------
-engine = create_engine(
+engine = create_async_engine(
     DATABASE_URL,
-    connect_args={"check_same_thread": False}  # required for SQLite
+    echo=False,  # set to True for debugging
+    future=True
 )
 
 # ----------------------------
-# Session maker
+# Async session maker
 # ----------------------------
-SessionLocal = sessionmaker(
-    autocommit=False,
+AsyncSessionLocal = sessionmaker(
+    bind=engine,
+    class_=AsyncSession,
+    expire_on_commit=False,
     autoflush=False,
-    bind=engine
+    autocommit=False,
 )
 
 # ----------------------------
@@ -33,9 +37,6 @@ Base = declarative_base()
 # ----------------------------
 # Dependency for FastAPI
 # ----------------------------
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
+async def get_db():
+    async with AsyncSessionLocal() as session:
+        yield session

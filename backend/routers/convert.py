@@ -1,8 +1,22 @@
 # backend/routers/convert.py
 from fastapi import APIRouter, UploadFile, File
 
-router = APIRouter()
+router = APIRouter(prefix="/convert", tags=["convert"])
 
-@router.post("/")
+@router.post("/convert")
 async def convert_file(file: UploadFile = File(...)):
-    return {"filename": file.filename, "status": "Conversion pending"}
+    """
+    Accept a file upload and mark it for conversion.
+    """
+    # 🔹 Read file contents asynchronously
+    contents = await file.read()
+
+    # (Here you could process/convert the file asynchronously)
+    # e.g., enqueue job to Celery, RQ, or custom background task
+
+    return {
+        "filename": file.filename,
+        "content_type": file.content_type,
+        "size_bytes": len(contents),
+        "status": "Conversion pending",
+    }

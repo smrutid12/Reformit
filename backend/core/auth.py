@@ -1,6 +1,7 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.orm import Session
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
 
 from core.database import get_db
 from models.user import User
@@ -8,16 +9,18 @@ from models.user import User
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="auth/token")
 
 
-def get_current_user(
+async def get_current_user(
     token: str = Depends(oauth2_scheme),
-    db: Session = Depends(get_db),
+    db: AsyncSession = Depends(get_db),
 ) -> User:
     """
-    Stub: Decode token and fetch user.
+    Decode token and fetch user.
     For now, treat token as username (demo).
-    Replace with JWT validation later.
+    Replace with proper JWT validation later.
     """
-    user = db.query(User).filter(User.username == token).first()
+    result = await db.execute(select(User).where(User.username == token))
+    user = result.scalars().first()
+
     if not user:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
