@@ -13,7 +13,11 @@
   },
   "oauth2": {
     "client_id": "318014760151-05se0fvvr52bb3nd3js5g693k57ab0a9.apps.googleusercontent.com",
-    "scopes": ["https://www.googleapis.com/auth/drive.file"]
+    "scopes": [
+      "https://www.googleapis.com/auth/drive.file",
+      "https://www.googleapis.com/auth/contacts.readonly",
+      "https://www.googleapis.com/auth/userinfo.email"
+    ]
   },
   "content_scripts": [
     {
