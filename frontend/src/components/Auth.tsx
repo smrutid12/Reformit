@@ -49,44 +49,61 @@ const Auth: React.FC<AuthProps> = ({ onSuccess }) => {
   ];
 
   const handleAuth = (providerId: string, authUrl: string) => {
+    console.log("Starting auth with:", providerId, authUrl);
+  
     chrome.identity.launchWebAuthFlow(
       {
         url: authUrl,
         interactive: true,
       },
-      async (redirectUrl) => {
-        if (chrome.runtime.lastError || !redirectUrl) {
-          console.error("Auth failed:", chrome.runtime.lastError);
+      async (redirectUrl?: string) => {
+        if (chrome.runtime.lastError) {
+          console.error("Auth failed:", chrome.runtime.lastError.message, chrome.runtime.lastError);
           return;
         }
-
-        const urlParams = new URL(redirectUrl).hash
-          ? new URLSearchParams(new URL(redirectUrl).hash.substring(1)) // Microsoft & OneDrive (#access_token=...)
-          : new URL(redirectUrl).searchParams; // Google (?id_token=...)
-
+  
+        if (!redirectUrl) {
+          console.error("No redirectUrl — user may have closed popup or provider rejected the request");
+          return;
+        }
+  
+        console.log("Redirect URL:", redirectUrl);
+  
+        // Parse redirect params safely
+        const parsedUrl = new URL(redirectUrl);
+        const urlParams = parsedUrl.hash
+          ? new URLSearchParams(parsedUrl.hash.substring(1)) // fragment (#access_token=…)
+          : parsedUrl.searchParams; // query (?id_token=…)
+  
+        console.log("OAuth params:", Object.fromEntries(urlParams.entries()));
+  
         const providerToken =
           urlParams.get("id_token") || urlParams.get("access_token");
-
+  
         if (!providerToken) {
-          console.error("No provider token found");
+          console.error("No provider token found in redirect URL");
           return;
         }
-
-        const res = await fetch(`${BACKEND_URL}/sso/${providerId}`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ provider_token: providerToken }),
-        });
-
-        if (!res.ok) {
-          console.error("Backend SSO failed:", await res.text());
-          return;
+  
+        try {
+          const res = await fetch(`${BACKEND_URL}/auth/sso/${providerId}`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ provider_token: providerToken }),
+          });
+  
+          if (!res.ok) {
+            console.error("Backend SSO failed:", await res.text());
+            return;
+          }
+  
+          const data = await res.json();
+          const jwt = data.access_token;
+  
+          chrome.storage.local.set({ token: jwt }, () => onSuccess(jwt));
+        } catch (err) {
+          console.error("Network error during SSO:", err);
         }
-
-        const data = await res.json();
-        const jwt = data.access_token;
-
-        chrome.storage.local.set({ token: jwt }, () => onSuccess(jwt));
       }
     );
   };

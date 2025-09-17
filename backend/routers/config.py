@@ -12,7 +12,9 @@ REDIRECT_URI = f"https://{settings.CHROME_EXTENSION_ID}.chromiumapp.org/"
 async def get_auth_config():
     google_client_id = settings.GOOGLE_CLIENT_ID
     microsoft_client_id = settings.MICROSOFT_CLIENT_ID
+
     print(google_client_id, microsoft_client_id, 'sssssssss')
+
     if not google_client_id or not microsoft_client_id:
         return JSONResponse(
             status_code=500,
