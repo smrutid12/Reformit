@@ -22,9 +22,22 @@ export async function handleImageConversion(
     return null;
   }
 
-  if (from === "SVG" && ["PNG", "JPG"].includes(to)) return svgToRaster(file, to as "PNG" | "JPG");
-  if (to === "SVG" && ["PNG", "JPG"].includes(from)) return rasterToSvg(file);
-  if (["PNG", "JPG"].includes(from) && ["PNG", "JPG"].includes(to)) return rasterToRaster(file, to as "PNG" | "JPG");
+  // SVG
+  if (to || from === "SVG") {
+    if (from === "SVG" && ["PNG", "JPG", "PDF"].includes(to)) {
+      return svgToRaster(file, to as "PNG" | "JPG" | "PDF");
+    }
+    if (to === "SVG" && ["PNG", "JPG"].includes(from)) {
+      return rasterToSvg(file);
+    }
+  }
 
-  return new Blob([await file.arrayBuffer()], { type: `image/${to.toLowerCase()}` });
+  // PNG & JPG
+  if (["PNG", "JPG"].includes(from) && ["PNG", "JPG"].includes(to)) {
+    return rasterToRaster(file, to as "PNG" | "JPG");
+  }
+
+  return new Blob([await file.arrayBuffer()], {
+    type: `image/${to.toLowerCase()}`,
+  });
 }
