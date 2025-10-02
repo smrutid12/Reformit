@@ -1,6 +1,6 @@
 # 🔄 Reformit - Universal File Converter Chrome Extension
 
-**Reformit** is a powerful Chrome extension that allows users to convert files directly from their browser! Supports various file types including images, documents, audio, video, and more — all with an intuitive interface.
+**Reformit** is an AI-powered Chrome extension that converts files instantly in your browser—supporting images, documents, audio, video, and more with a simple, intuitive interface..
 
 ---
 
