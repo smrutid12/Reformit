@@ -1,0 +1,38 @@
+{
+  "manifest_version": 3,
+  "name": "Reformit",
+  "description": "Offline file converter with premium features",
+  "version": "1.0",
+  "permissions": ["storage", "downloads", "identity"],
+  "action": {
+    "default_popup": "src/popup/index.html",
+    "default_icon": "reformit_logo.png"
+  },
+  "background": {
+    "service_worker": "background.js"
+  },
+  "oauth2": {
+    "client_id": "318014760151-ph2rf9lb3qjgprtaj8j2hang1l404lfv.apps.googleusercontent.com",
+    "scopes": ["openid", "email", "profile"]
+  },
+  "content_scripts": [
+    {
+      "matches": ["<all_urls>"],
+      "js": ["content.js"]
+    }
+  ],
+  "icons": {
+    "48": "reformit_logo.png"
+  },
+  "web_accessible_resources": [
+    {
+      "resources": [
+        "history.svg",
+        "onedrive.svg",
+        "zip_file.svg",
+        "google_drive.svg"
+      ],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
